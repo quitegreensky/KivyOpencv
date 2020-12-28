@@ -74,6 +74,10 @@ class ImageProcessingBase:
         else:
             return False
 
+    def flip(self, code=0):
+        self.cv_image= cv2.flip(self.cv_image, code)
+        return self
+
 class ImageProcessing(ImageProcessingBase):
     """
     Example: 
@@ -81,10 +85,6 @@ class ImageProcessing(ImageProcessingBase):
         self.root.ids.image.texture = texture
         texture = ImageProcessing(texture).flip().contrast(2).brightness(50).show_image()
     """
-
-    def flip(self, code=0):
-        self.cv_image= cv2.flip(self.cv_image, code)
-        return self
 
     def resize(self, **kwargs):
         self.cv_image = cv2.resize(self.cv_image, **kwargs)
