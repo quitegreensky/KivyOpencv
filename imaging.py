@@ -1,6 +1,6 @@
 from kivy.graphics.texture import Texture
 import cv2
-import numpy as np 
+import numpy as np
 
 class ImageProcessingBase:
 
@@ -8,7 +8,7 @@ class ImageProcessingBase:
     @property
     def colorfmt(self):
         return self._colorfmt
-    
+
     @colorfmt.setter
     def colorfmt(self,fmt):
         self._colorfmt = fmt
@@ -38,7 +38,9 @@ class ImageProcessingBase:
             raise TypeError
         return my_image
 
-    def texture2cv(self, texture):
+    def texture2cv(self, texture=None):
+        if not texture:
+            return self.cv_image
         width, height = texture.size
         pixels = texture.pixels
         newvalue = np.frombuffer(pixels, np.uint8)
@@ -80,7 +82,7 @@ class ImageProcessingBase:
 
 class ImageProcessing(ImageProcessingBase):
     """
-    Example: 
+    Example:
         texture = ImageProcessing(path).resize(dsize=(0,0), fx=0.5, fy=0.5).contrast(1).brightness(50).cv2texture()
         self.root.ids.image.texture = texture
         texture = ImageProcessing(texture).flip().contrast(2).brightness(50).show_image()
@@ -88,18 +90,18 @@ class ImageProcessing(ImageProcessingBase):
 
     def resize(self, **kwargs):
         self.cv_image = cv2.resize(self.cv_image, **kwargs)
-        return self 
+        return self
 
     def contrast(self, contrast=1):
         """1.0-3.0"""
         self.cv_image = cv2.convertScaleAbs( self.cv_image, alpha=contrast)
-        return self 
+        return self
 
     def brightness(self, brightness=0):
         """0-100"""
         self.cv_image = cv2.convertScaleAbs( self.cv_image, beta=brightness)
         return self
-    
+
     def grayscale(self):
         self.cv_image = self.cvt_colorfmt(self.cv_image, "GRAY")
         return self
